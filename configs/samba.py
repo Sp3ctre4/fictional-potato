@@ -34,15 +34,18 @@ if sys.platform.startswith("linux"):
                 srcHostName = data[3]
                 dstHostName = data[4]
                 # 5 is time
-                auditAction = data[5]
-                # 6 is status
-                # 7 is attribute
-                # 8 + 9 define action
-                userAction = data[8] + " " + data[9]
-                path = data[10]
+                auditAction = data[6]
+                # 7 is status
+                # 8 is attribute
+                # 9 + 10 define action
+                userAction = data[9] + " " + data[10]
+                path = data[11]
 
                 if user == "":
                     user = "anonymous"
+
+                if dstHostName == "":
+                    dstHostName = "Non-Interactive Session"
 
                 data = {}
                 data["src_host"] = srcHost

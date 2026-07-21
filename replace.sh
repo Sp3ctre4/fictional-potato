@@ -18,7 +18,7 @@ logger_dst="$(find / -type f -name "logger.py" 2>/dev/null | grep "opencanary")"
 smb_dst="/etc/samba/smb.conf"
 canary_dst="/etc/opencanaryd/opencanary.conf"
 
-$webhook="$(cat ~/link.txt)"
+webhook="$(cat ~/link.txt)"
 
 # Replace config files
 
@@ -28,14 +28,14 @@ sudo cp $samba_config $samba_dst
 echo "[*] $llmnr_config -> $llmnr_dst"
 sudo cp $llmnr_config $llmnr_dst
 
-echo "[*] $logger_config -> $logger_config"
-sudo cp $logger_config $logger_config
+echo "[*] $logger_config -> $logger_dst"
+sudo cp $logger_config $logger_dst
 
-echo "[*] $smb_config -> $smb_config"
-sudo cp $smb_config $smb_config
+echo "[*] $smb_config -> $smb_dst"
+sudo cp $smb_config $smb_dst
 
-echo "[*] $canary_config -> $canary_config"
-sudo cp $canary_config $canary_config
+echo "[*] $canary_config -> $canary_dst"
+sudo cp $canary_config $canary_dst
 
 echo "[*] Inserting webhook link"
 sed -i "s/09333-link-09333/$webhook/g" $canary_dst

@@ -21,21 +21,25 @@ if sys.platform.startswith("linux"):
 
                 data = matches.groups()[0].split("|")
 
-                user = data[0]
-                srcHost = data[1]
-                dstHost = data[2]
+                        # %I    client IP
+                        # %i    local IP
+                        # %U	session username
+                        # %M    Internet name of client machine
+                        # %L    NetBIOS name of the server
+                        # %T    current date and time
+
+                srcHost = data[0]
+                dstHost = data[1]
+                user = data[2]
                 srcHostName = data[3]
-                shareName = data[4]
-                dstHostName = data[5]
-                smbVersion = data[6]
-                smbArch = data[7]
-                domainName = data[9]
-                auditAction = data[10]
-                auditStatus = data[11]
-                # 12 is attribute
-                # 13 + 14 define action
-                userAction = data[13] + " " + data[14]
-                path = data[15]
+                dstHostName = data[4]
+                # 5 is time
+                auditAction = data[5]
+                # 6 is status
+                # 7 is attribute
+                # 8 + 9 define action
+                userAction = data[8] + " " + data[9]
+                path = data[10]
 
                 if user == "":
                     user = "anonymous"
@@ -49,15 +53,10 @@ if sys.platform.startswith("linux"):
                 data["logdata"] = {
                     "USER": user,
                     "REMOTENAME": srcHostName,
-                    "SHARENAME": shareName,
                     "LOCALNAME": dstHostName,
-                    #"SMBVER": smbVersion,
-                    #"SMBARCH": smbArch,
-                    #"DOMAIN": domainName,
                     "AUDITACTION": auditAction,
-                    #"STATUS": auditStatus,
-                    "FILENAME": path,
                     "ACTION": userAction,
+                    "FILENAME": path,
                 }
                 self.logger.log(data)
 

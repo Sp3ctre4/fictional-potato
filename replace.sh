@@ -38,6 +38,8 @@ echo "[*] $canary_config -> $canary_dst"
 sudo cp $canary_config $canary_dst
 
 echo "[*] Inserting webhook link"
-sed -i "s/09333-link-09333/$webhook/g" $canary_dst
+sudo sed -i "s|09333-link-09333|$webhook|g" $canary_dst
+# do again to replace the & symbols
+sudo sed -i 's/09333-link-09333/\&/g' $canary_dst
 
 echo "[+] Complete."

@@ -33,8 +33,8 @@ class HoneyPotSSHUserAuthServer(userauth.SSHUserAuthServer):
         peer = self.transport.getPeer()
 
         logdata = {
-            "LOCALVERSION": self.transport.ourVersionString,
-            "REMOTEVERSION": self.transport.otherVersionString,
+        #    "LOCALVERSION": self.transport.ourVersionString,
+            "REMOTESSH": self.transport.otherVersionString,
         }
         logtype = (
             self.transport.factory.canaryservice.logger.LOG_SSH_REMOTE_VERSION_SENT
@@ -78,8 +78,8 @@ class HoneyPotSSHUserAuthServer(userauth.SSHUserAuthServer):
         logdata = {
             "USERNAME": self.user,
             "PASSWORD": password,
-            "LOCALVERSION": self.transport.ourVersionString,
-            "REMOTEVERSION": self.transport.otherVersionString,
+        #    "LOCALVERSION": self.transport.ourVersionString,
+            "REMOTESSH": self.transport.otherVersionString,
         }
         logtype = self.transport.factory.canaryservice.logger.LOG_SSH_LOGIN_ATTEMPT
 

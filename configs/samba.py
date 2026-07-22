@@ -44,8 +44,8 @@ if sys.platform.startswith("linux"):
                 if user == "":
                     user = "anonymous"
 
-                if dstHostName == "":
-                    dstHostName = "Non-Interactive Session"
+                if srcHostName == "":
+                    srcHostName = "Non-Interactive Session"
 
                 data = {}
                 data["src_host"] = srcHost

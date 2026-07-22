@@ -53,6 +53,17 @@ class SynLogWatcher(FileSystemWatcher):
             if "" in kv.keys():
                 kv.pop("")
 
+            # remove keys that I think are unnecessary
+            kv.pop("IN")
+            kv.pop("OUT")
+            kv.pop("LEN")
+            kv.pop("TOS")
+            kv.pop("PREC")
+            kv.pop("TTL")
+            kv.pop("WINDOW")
+            kv.pop("RES")
+            kv.pop("URGP")
+
             data = {}
             data["src_host"] = kv.pop("SRC")
             data["src_port"] = kv.pop("SPT")

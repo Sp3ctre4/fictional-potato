@@ -52,6 +52,6 @@ sudo sed -i "s|09333-link-09333|$webhook|g" $canary_dst
 sudo sed -i 's/09333-link-09333/\&/g' $canary_dst
 
 echo "[*] Turning off python depreciation warnings?"
-export PYTHONWARNINGS="ignore::CryptographyDeprecationWarning"
+python3 -W ignore::DeprecationWarning
 
 echo "[+] Complete."

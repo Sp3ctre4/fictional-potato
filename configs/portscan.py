@@ -60,7 +60,8 @@ class SynLogWatcher(FileSystemWatcher):
             kv.pop("TOS")
             kv.pop("PREC")
             kv.pop("TTL")
-            kv.pop("DF")
+            if "DF" in kv:
+                kv.pop("DF")
             kv.pop("WINDOW")
             kv.pop("RES")
             kv.pop("URGP")
@@ -69,9 +70,10 @@ class SynLogWatcher(FileSystemWatcher):
             tcp_flags = ["SYN", "ACK", "FIN", "RST", "URG", "PSH", "WND", "CHK", "SEQ", "ACK"]
             res_flags = []
 
-            for key, value in kv:
+            for key in kv:
                 if key in tcp_flags:
                     res_flags.append(key)
+                    kv.pop(key)
 
             flags = ", ".join(res_flags)
             kv["flags"] = flags

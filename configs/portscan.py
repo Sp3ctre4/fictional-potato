@@ -70,10 +70,14 @@ class SynLogWatcher(FileSystemWatcher):
             tcp_flags = ["SYN", "ACK", "FIN", "RST", "URG", "PSH", "WND", "CHK", "SEQ", "ACK"]
             res_flags = []
 
+            # if flag found in kv, added to temp array
             for key in kv:
                 if key in tcp_flags:
                     res_flags.append(key)
-                    kv.pop(key)
+
+            ## loop back through temp array and remove from original kv
+            for key in res_flags:
+                kv.pop(key)
 
             flags = ", ".join(res_flags)
             kv["flags"] = flags

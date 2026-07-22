@@ -51,7 +51,7 @@ sudo sed -i "s|09333-link-09333|$webhook|g" $canary_dst
 # do again to replace the & symbols
 sudo sed -i 's/09333-link-09333/\&/g' $canary_dst
 
-ecoh "[*] Turning off python depreciation warnings?"
-export PYTHONWARNINGS="ignore::CryptographyDepreciationWarning"
+echo "[*] Turning off python depreciation warnings?"
+export PYTHONWARNINGS="ignore::CryptographyDeprecationWarning"
 
 echo "[+] Complete."

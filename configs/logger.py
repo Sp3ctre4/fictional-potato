@@ -5,7 +5,7 @@ import socket
 import hpfeeds
 import sys
 
-from datetime import datetime
+from datetime import datetime, timezone
 from logging.handlers import SocketHandler
 from twisted.internet import reactor
 import requests
@@ -111,9 +111,11 @@ class LoggerBase(object):
 
     def sanitizeLog(self, logdata):
         logdata["node_id"] = self.node_id
-        logdata["local_time"] = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")
-        logdata["utc_time"] = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")
-        logdata["local_time_adjusted"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+        logdata["utc_time"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")
+        logdata["local_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+        #logdata["local_time"] = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")
+        #logdata["utc_time"] = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")
+        #logdata["local_time_adjusted"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
         if "src_host" not in logdata:
             logdata["src_host"] = ""
         if "src_port" not in logdata:

@@ -162,30 +162,25 @@ class CanaryPortscan(CanaryService):
             )
         )
 
+        # custom rule to drop port 7680
+        os.system(
+            'sudo {0} -t filter -D INPUT -p tcp --dport 7680 -j DROP ! -i lo'.format(
+                iptables_path, self.synrate
+            )
+        )
+        os.system(
+            'sudo {0} -t filter -I INPUT -p tcp --dport 7680 -j DROP ! -i lo'.format(
+                iptables_path, self.synrate
+            )
+        )
+
         # Logging rules for canaryfw.
-        # We ignore loopback interface traffic as it is taken care of in above rule
-
-        # custom rule to drop port 7680?
-        # drop the rule if match?
-        os.system(
-            'sudo {0} -t filter -D INPUT -p tcp --dport 7680 ! -i lo'.format(
-                iptables_path, self.synrate
-            )
-        )
-        # create the rule
-        os.system(
-            'sudo {0} -t filter -A INPUT -p tcp --dport 7680 ! -i lo'.format(
-                iptables_path, self.synrate
-            )
-        )
-
-        # drop the rule if match?
+                # We ignore loopback interface traffic as it is taken care of in above rule
         os.system(
             'sudo {0} -t filter -D INPUT -p tcp --syn -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/second" ! -i lo'.format(
                 iptables_path, self.synrate
             )
         )
-        # create the rule
         os.system(
             'sudo {0} -t filter -A INPUT -p tcp --syn -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/second" ! -i lo'.format(
                 iptables_path, self.synrate

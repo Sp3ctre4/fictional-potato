@@ -43,8 +43,8 @@ sudo cp $portscan_config $portscan_dst
 echo "[*] $smb_config -> $smb_dst"
 sudo cp $smb_config $smb_dst
 
-echo "[*] $canary_config -> $canary_dst"
-sudo cp $canary_config $canary_dst
+echo "[*] $canary_config !-> $canary_dst"
+#sudo cp $canary_config $canary_dst
 
 #echo "[*] Inserting webhook link"
 #sudo sed -i "s|09333-link-09333|$webhook|g" $canary_dst

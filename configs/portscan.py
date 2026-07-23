@@ -80,6 +80,9 @@ class SynLogWatcher(FileSystemWatcher):
                 kv.pop(key)
 
             flags = ", ".join(res_flags)
+            if flags == "":
+                flags = "NULL"
+
             kv["flags"] = flags
 
             data = {}
@@ -163,7 +166,18 @@ class CanaryPortscan(CanaryService):
         # We ignore loopback interface traffic as it is taken care of in above rule
 
         # custom rule to drop port 7680?
-        # add ! --dport 7680 to all subsequent rules?
+        # drop the rule if match?
+        os.system(
+            'sudo {0} -t filter -D INPUT -p tcp --dport 7680 ! -i lo'.format(
+                iptables_path, self.synrate
+            )
+        )
+        # create the rule
+        os.system(
+            'sudo {0} -t filter -A INPUT -p tcp --dport 7680 ! -i lo'.format(
+                iptables_path, self.synrate
+            )
+        )
 
         # drop the rule if match?
         os.system(

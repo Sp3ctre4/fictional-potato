@@ -149,73 +149,79 @@ class CanaryPortscan(CanaryService):
             raise Exception(err)
 
         os.system(
-            'sudo {0} -t mangle -D PREROUTING -p tcp -i lo -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/hour"'.format(
+            'sudo {0} -t filter -D INPUT -p tcp -i lo -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/hour"'.format(
                 iptables_path, self.lorate
             )
         )
         os.system(
-            'sudo {0} -t mangle -A PREROUTING -p tcp -i lo -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/hour"'.format(
+            'sudo {0} -t filter -A INPUT -p tcp -i lo -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/hour"'.format(
                 iptables_path, self.lorate
             )
         )
 
         # Logging rules for canaryfw.
         # We ignore loopback interface traffic as it is taken care of in above rule
+
+        # custom rule to drop port 7680?
+        # add ! --dport 7680 to all subsequent rules?
+
+        # drop the rule if match?
         os.system(
-            'sudo {0} -t mangle -D PREROUTING -p tcp --syn -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/second" ! -i lo'.format(
+            'sudo {0} -t filter -D INPUT -p tcp --syn -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/second" ! -i lo'.format(
                 iptables_path, self.synrate
             )
         )
+        # create the rule
         os.system(
-            'sudo {0} -t mangle -A PREROUTING -p tcp --syn -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/second" ! -i lo'.format(
+            'sudo {0} -t filter -A INPUT -p tcp --syn -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/second" ! -i lo'.format(
                 iptables_path, self.synrate
             )
         )
 
         # Match the T3 probe of the nmap OS detection based on TCP flags and TCP options string
         os.system(
-            'sudo {0} -t mangle -D PREROUTING -p tcp --tcp-flags ALL URG,PSH,SYN,FIN -m u32 --u32 "40=0x03030A01 && 44=0x02040109 && 48=0x080Affff && 52=0xffff0000 && 56=0x00000402" -j LOG --log-level warning --log-prefix="canarynmap: " -m limit --limit="{1}/second"'.format(
+            'sudo {0} -t filter -D INPUT -p tcp --tcp-flags ALL URG,PSH,SYN,FIN -m u32 --u32 "40=0x03030A01 && 44=0x02040109 && 48=0x080Affff && 52=0xffff0000 && 56=0x00000402" -j LOG --log-level warning --log-prefix="canarynmap: " -m limit --limit="{1}/second"'.format(
                 iptables_path, self.nmaposrate
             )
         )
         os.system(
-            'sudo {0} -t mangle -A PREROUTING -p tcp --tcp-flags ALL URG,PSH,SYN,FIN -m u32 --u32 "40=0x03030A01 && 44=0x02040109 && 48=0x080Affff && 52=0xffff0000 && 56=0x00000402" -j LOG --log-level warning --log-prefix="canarynmap: " -m limit --limit="{1}/second"'.format(
+            'sudo {0} -t filter -A INPUT -p tcp --tcp-flags ALL URG,PSH,SYN,FIN -m u32 --u32 "40=0x03030A01 && 44=0x02040109 && 48=0x080Affff && 52=0xffff0000 && 56=0x00000402" -j LOG --log-level warning --log-prefix="canarynmap: " -m limit --limit="{1}/second"'.format(
                 iptables_path, self.nmaposrate
             )
         )
 
         # Nmap Null Scan
         os.system(
-            'sudo {0} -t mangle -D PREROUTING -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50000400" -j LOG --log-level warning --log-prefix="canarynmapNULL: " -m limit --limit="{1}/second"'.format(
+            'sudo {0} -t filter -D INPUT -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50000400" -j LOG --log-level warning --log-prefix="canarynmapNULL: " -m limit --limit="{1}/second"'.format(
                 iptables_path, self.nmaposrate
             )
         )
         os.system(
-            'sudo {0} -t mangle -A PREROUTING -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50000400" -j LOG --log-level warning --log-prefix="canarynmapNULL: " -m limit --limit="{1}/second"'.format(
+            'sudo {0} -t filter -A INPUT -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50000400" -j LOG --log-level warning --log-prefix="canarynmapNULL: " -m limit --limit="{1}/second"'.format(
                 iptables_path, self.nmaposrate
             )
         )
 
         # Nmap Xmas Scan
         os.system(
-            'sudo {0} -t mangle -D PREROUTING -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50290400" -j LOG --log-level warning --log-prefix="canarynmapXMAS: " -m limit --limit="{1}/second"'.format(
+            'sudo {0} -t filter -D INPUT -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50290400" -j LOG --log-level warning --log-prefix="canarynmapXMAS: " -m limit --limit="{1}/second"'.format(
                 iptables_path, self.nmaposrate
             )
         )
         os.system(
-            'sudo {0} -t mangle -A PREROUTING -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50290400" -j LOG --log-level warning --log-prefix="canarynmapXMAS: " -m limit --limit="{1}/second"'.format(
+            'sudo {0} -t filter -A INPUT -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50290400" -j LOG --log-level warning --log-prefix="canarynmapXMAS: " -m limit --limit="{1}/second"'.format(
                 iptables_path, self.nmaposrate
             )
         )
 
         # Nmap Fin Scan
         os.system(
-            'sudo {0} -t mangle -D PREROUTING -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50010400" -j LOG --log-level warning --log-prefix="canarynmapFIN: " -m limit --limit="{1}/second"'.format(
+            'sudo {0} -t filter -D INPUT -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50010400" -j LOG --log-level warning --log-prefix="canarynmapFIN: " -m limit --limit="{1}/second"'.format(
                 iptables_path, self.nmaposrate
             )
         )
         os.system(
-            'sudo {0} -t mangle -A PREROUTING -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50010400" -j LOG --log-level warning --log-prefix="canarynmapFIN: " -m limit --limit="{1}/second"'.format(
+            'sudo {0} -t filter -A INPUT -p tcp -m u32 --u32 "6&0xFF=0x6 && 0>>22&0x3C@12=0x50010400" -j LOG --log-level warning --log-prefix="canarynmapFIN: " -m limit --limit="{1}/second"'.format(
                 iptables_path, self.nmaposrate
             )
         )

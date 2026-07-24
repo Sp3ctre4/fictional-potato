@@ -175,7 +175,7 @@ class CanaryPortscan(CanaryService):
         )
 
         # Logging rules for canaryfw.
-                # We ignore loopback interface traffic as it is taken care of in above rule
+        # We ignore loopback interface traffic as it is taken care of in above rule
         os.system(
             'sudo {0} -t filter -D INPUT -p tcp --syn -j LOG --log-level warning --log-prefix="canaryfw: " -m limit --limit="{1}/second" ! -i lo'.format(
                 iptables_path, self.synrate
